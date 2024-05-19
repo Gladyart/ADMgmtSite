@@ -6,6 +6,6 @@ from .tests import DCConnection
 def index(response):
     return render(response, "base.html")
 def home(response):
-    ls = DCConnection.ls
+    entry = DCConnection.entry_dict
 
-    return render(response, "home.html", {"ls":ls})
+    return render(response, "home.html", {"entry":entry})
