@@ -6,6 +6,14 @@
 {% block content %}
 <div>
     <H1>Home</H1>
+        <div>
+            {% for key in entry %}
+                <li>{{key}}</li>
+
+            {% endfor %}
+        </div>
+        
+    
     <h1>{{entry}}</h1>
 </div>
 {% endblock %}

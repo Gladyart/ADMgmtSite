@@ -16,15 +16,11 @@ class DCConnection():
     conn.search('cn=users,dc=mydomain,dc=com', '(objectclass=person)')
     # output: [CN=admin1,CN=Users,DC=mydomain,DC=com]
 
-    conn.search('cn=users,dc=mydomain,dc=com', '(&(objectclass=person)(cn=admin1))', attributes=['sn', 'krbLastPwdChange', 'objectclass'])
-    """DN: uid=admin,cn=users,cn=accounts,dc=demo1,dc=freeipa,dc=org - STATUS: Read - READ TIME: 2016-10-09T20:39:32.711000
-    krbLastPwdChange: 2016-10-09 10:01:18+00:00
-    objectclass: top, person, posixaccount, krbprincipalaux
-                krbticketpolicyaux, inetuser, ipaobject
-                ipasshuser, ipaSshGroupOfPubKeys, ipaNTUserAttrs
-    sn: Administrator
-    """
-    entry = conn.entries[0].entry_to_json
+    # specify attr, will use on user page
+    # output is sorted alfabetically by key
+    conn.search('cn=users,dc=mydomain,dc=com', '(&(objectclass=person)(cn=admin1))', attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'objectclass', 'pwdLastSet', 'sAMAccountName'])
+    
+    entry = conn.entries[0].entry_to_json()
     
     # json converts class to dictionary
     entry_dict = json.loads(entry)
