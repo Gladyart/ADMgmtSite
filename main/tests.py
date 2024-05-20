@@ -18,7 +18,7 @@ class DCConnection():
 
     # specify attr, will use on user page
     # output is sorted alfabetically by key
-    conn.search('cn=users,dc=mydomain,dc=com', '(&(objectclass=person)(cn=admin1))', attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'objectclass', 'pwdLastSet', 'sAMAccountName'])
+    conn.search('cn=users,dc=mydomain,dc=com', '(&(objectclass=person)(cn=admin1))', attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
     
     entry = conn.entries[0].entry_to_json()
     
