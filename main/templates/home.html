@@ -5,15 +5,13 @@
 
 {% block content %}
 <div>
-    <H1>Home</H1>
-        <div>
-            {% for key in entry %}
-                <li>{{key}}</li>
-
-            {% endfor %}
-        </div>
-        
+    <h1>{{sAMAccountName}}</h1>
+    <h1>{{displayName}}</h1>
+    <h1>{{description}}</h1>   
+    <h1>{{mail}}</h1>
+    <h1>{{manager}}</h1>
     
-    <h1>{{entry}}</h1>
+    <h1>{{lastLogon}}</h1>
+    <h1>{{pwdLastSet}}</h1>
 </div>
 {% endblock %}
