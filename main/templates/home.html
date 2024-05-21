@@ -4,14 +4,39 @@
 
 
 {% block content %}
-<div>
-    <h1>{{sAMAccountName}}</h1>
-    <h1>{{displayName}}</h1>
-    <h1>{{description}}</h1>   
-    <h1>{{mail}}</h1>
-    <h1>{{manager}}</h1>
-    
-    <h1>{{lastLogon}}</h1>
-    <h1>{{pwdLastSet}}</h1>
+<div class="dir-properties">
+    <h3>{{sAMAccountName}}</h3>
+    <ul class="list-group list-group-light">
+        <li class="dir-properties-label">Display name
+            <span class="dir-properties-value">{{displayName}}
+                <hr class="mt-0 mb-4">
+            </span>
+        </li>        
+        <li class="dir-properties-label">Description
+            <span class="dir-properties-value">{{description}}
+                <hr class="mt-0 mb-4">
+            </span>
+        </li>   
+        <li class="dir-properties-label">Email
+            <span class="dir-properties-value">{{mail}}
+                <hr class="mt-0 mb-4">
+            </span></li>           
+        <li class="dir-properties-label">Manager
+            <span class="dir-properties-value">{{manager}}
+                <hr class="mt-0 mb-4">
+            </span>
+        </li>        
+        <li class="dir-properties-label">Last Logon
+            <span class="dir-properties-value">{{lastLogon}}
+                <hr class="mt-0 mb-4">
+            </span>
+        </li>        
+        <li class="dir-properties-label">Password Last Set
+            <span class="dir-properties-value">{{pwdLastSet}}
+                <hr class="mt-0 mb-4">
+            </span>
+        </li>
+        
+    </ul>
 </div>
 {% endblock %}
