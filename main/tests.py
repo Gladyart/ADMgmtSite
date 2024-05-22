@@ -1,8 +1,9 @@
 from django.test import TestCase
 
+
 # Create your tests here.
 from ldap3 import Server, Connection, ALL
-import json
+
 
 class DCConnection():
 
@@ -13,13 +14,19 @@ class DCConnection():
     # need to relate connection to login(session)
     # no TLS config applied yet
     
-    conn.search('cn=users,dc=mydomain,dc=com', '(objectclass=person)')
+    #conn.search('cn=users,dc=mydomain,dc=com', '(objectclass=person)')
     # output: [CN=admin1,CN=Users,DC=mydomain,DC=com]
-
+    
+    userID = 'admin1'
+    OUPath = 'cn=users,dc=mydomain,dc=com'
+    searchParameters = f'(&(objectclass=person)(cn={userID}))'
     # specify attr, will use on user page
     # output is sorted alfabetically by key
-    conn.search('cn=users,dc=mydomain,dc=com', '(&(objectclass=person)(cn=admin1))', 
+    conn.search(OUPath, searchParameters, 
                 attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
-    
+        
     entry = conn.entries[0]
+
+
+
     
