@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Search{% endblock %}
+
+
+{% block content %}
+<div class="dir-search">
+    <form method="POST" action="{% url 'searh' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <!---->
+            <input type="text" class="form-control" placeholder="Search" name="searched">
+        </div>
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </form>
+</div>
+<div>
+    {% if searched %}
+
+    {{searched}}
+
+    {% endif %}
+</div>
+{% endblock %}

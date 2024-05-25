@@ -41,22 +41,22 @@ def userID(response, id):
                 attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
         
     entry = conn.entries[0]
-
-    accountExpires = entry['accountExpires']
-    description = entry['description']
-    displayName = entry['displayName']
-    lastLogon = entry['lastLogon']
-    mail = entry['mail']
-    manager = entry['manager']
-    pwdLastSet = entry['pwdLastSet']
-    sAMAccountName = entry['sAMAccountName']
-
-    return render(response, "home.html", {"accountExpires":accountExpires,
-                                          "description":description,
-                                          "displayName":displayName,
-                                          "lastLogon":lastLogon,
-                                          "mail":mail,
-                                          "manager":manager,
-                                          "pwdLastSet":pwdLastSet,
-                                          "sAMAccountName":sAMAccountName,
+   
+    return render(response, "home.html", {"accountExpires":entry['accountExpires'],
+                                          "description":entry['description'],
+                                          "displayName":entry['displayName'],
+                                          "lastLogon":entry['lastLogon'],
+                                          "mail":entry['mail'],
+                                          "manager":entry['manager'],
+                                          "pwdLastSet":entry['pwdLastSet'],
+                                          "sAMAccountName":entry['sAMAccountName'],
                                           })
+
+def search(request):
+
+    if request.method == "POST":
+        searched = request.POST
+        return render(request, "search.html", {"searched":searched})
+    
+    else:
+        return render(request, "search.html", {})
