@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="dir-search">
-    <form method="POST" action="{% url 'searh' %}">
+    <form method="POST" action="{% url 'search' %}">
         {% csrf_token %}
         <div class="mb-3">
             <!---->
@@ -16,8 +16,9 @@
 </div>
 <div>
     {% if searched %}
-
-    {{searched}}
+        {% for item in searched %}
+            {{searched}} <br/>
+        {% endfor %}
 
     {% endif %}
 </div>

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
 from .tests import DCConnection
 
 
@@ -28,6 +29,29 @@ def home(response):
                                           "sAMAccountName":sAMAccountName,
                                           })
 
+
+def search(request):
+
+    if request.method == "POST":
+        searched = request.POST["searched"]
+        
+        conn = DCConnection.conn
+        OUPath = DCConnection.OUPath
+
+        searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'
+        conn.search(OUPath, searchParameters,)
+                    
+        searched = conn.entries
+
+        if not searched:
+            messages.success(request, "Item not found")
+            return render(request, "search.html", {})
+        else:
+            return render(request, "search.html", {"searched":searched})
+    
+    else:
+        return render(request, "search.html", {})
+
 def userID(response, id):
     
     userID = id
@@ -52,11 +76,3 @@ def userID(response, id):
                                           "sAMAccountName":entry['sAMAccountName'],
                                           })
 
-def search(request):
-
-    if request.method == "POST":
-        searched = request.POST
-        return render(request, "search.html", {"searched":searched})
-    
-    else:
-        return render(request, "search.html", {})

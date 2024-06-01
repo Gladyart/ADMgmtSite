@@ -7,7 +7,7 @@ from ldap3 import Server, Connection, ALL
 
 class DCConnection():
 
-    server = Server("WINDC0001.mshome.net", use_ssl=False, get_info=ALL)
+    server = Server("WINDC0001", use_ssl=False, get_info=ALL)
 
     conn = Connection(server, 'cn=admin1,cn=users,dc=mydomain,dc=com', 'Secret123', auto_bind=True)
     # connection test user
