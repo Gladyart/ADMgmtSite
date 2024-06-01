@@ -39,7 +39,7 @@ def search(request):
         OUPath = DCConnection.OUPath
 
         searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'
-        conn.search(OUPath, searchParameters,)
+        conn.search(OUPath, searchParameters, attributes=['sAMAccountName'])
                     
         searched = conn.entries
 
