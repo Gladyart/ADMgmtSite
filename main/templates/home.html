@@ -5,39 +5,39 @@
 
 {% block content %}
 <div class="dir-properties">
-    <h3>{{sAMAccountName}}</h3>
+    <h3>{{entry.sAMAccountName}}</h3>
     <ul class="list-group list-group-light">
         <li class="dir-properties-label">Display name
-            <span class="dir-properties-value">{{displayName}}
+            <span class="dir-properties-value">{{entry.displayName}}
                 <hr class="mt-0 mb-4">
             </span>
         </li>        
         <li class="dir-properties-label">Description
-            <span class="dir-properties-value">{{description}}
+            <span class="dir-properties-value">{{entry.description}}
                 <hr class="mt-0 mb-4">
             </span>
         </li>   
         <li class="dir-properties-label">Email
-            <span class="dir-properties-value">{{mail}}
+            <span class="dir-properties-value">{{entry.mail}}
                 <hr class="mt-0 mb-4">
             </span></li>           
         <li class="dir-properties-label">Manager
-            <span class="dir-properties-value">{{manager}}
+            <span class="dir-properties-value">{{entry.manager}}
                 <hr class="mt-0 mb-4">
             </span>
         </li>      
         <li class="dir-properties-label">Account Expires 
-            <span class="dir-properties-value">{{accountExpires}}
+            <span class="dir-properties-value">{{entry.accountExpires}}
                 <hr class="mt-0 mb-4">
             </span>
         </li>  
         <li class="dir-properties-label">Last Logon
-            <span class="dir-properties-value">{{lastLogon}}
+            <span class="dir-properties-value">{{entry.lastLogon}}
                 <hr class="mt-0 mb-4">
             </span>
         </li>        
         <li class="dir-properties-label">Password Last Set
-            <span class="dir-properties-value">{{pwdLastSet}}
+            <span class="dir-properties-value">{{entry.pwdLastSet}}
                 <hr class="mt-0 mb-4">
             </span>
         </li>

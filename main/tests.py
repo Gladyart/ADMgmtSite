@@ -22,6 +22,10 @@ class DCConnection():
     searchParameters = f'(&(objectclass=person)(cn={userID}))'
     # specify attr, will use on user page
     # output is sorted alfabetically by key
+    ## for later:
+    # searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'
+    # searchParameters = f'(&(givenName={firstName}*)(mail=*@example.org))'
+
     conn.search(OUPath, searchParameters, 
                 attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
         

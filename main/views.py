@@ -8,26 +8,30 @@ from .tests import DCConnection
 def index(response):
     return render(response, "base.html")
 
-def home(response):
-    
-    accountExpires = DCConnection.entry['accountExpires']
-    description = DCConnection.entry['description']
-    displayName = DCConnection.entry['displayName']
-    lastLogon = DCConnection.entry['lastLogon']
-    mail = DCConnection.entry['mail']
-    manager = DCConnection.entry['manager']
-    pwdLastSet = DCConnection.entry['pwdLastSet']
-    sAMAccountName = DCConnection.entry['sAMAccountName']
+def home(request):
+            
+    conn = DCConnection.conn
+    OUPath = DCConnection.OUPath
 
-    return render(response, "home.html", {"accountExpires":accountExpires,
-                                          "description":description,
-                                          "displayName":displayName,
-                                          "lastLogon":lastLogon,
-                                          "mail":mail,
-                                          "manager":manager,
-                                          "pwdLastSet":pwdLastSet,
-                                          "sAMAccountName":sAMAccountName,
-                                          })
+    if request.method == "POST":
+        searched = request.POST["searched"]
+
+        searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'        
+        conn.search(OUPath, searchParameters, attributes=['sAMAccountName'])                       
+        searched = conn.entries
+
+        if not searched:
+            messages.success(request, "Item not found")
+            return render(request, "search.html", {})
+        else:
+            return render(request, "search.html", {"searched":searched})
+    else:
+        currentUser = 'admin1'
+        searchParameters = f'(&(objectclass=person)(cn={currentUser}))'
+        conn.search(OUPath, searchParameters, attributes=['sAMAccountName'])                       
+        entry = conn.entries[0]
+
+        return render(request, "home.html", {"entry":entry})
 
 
 def search(request):
