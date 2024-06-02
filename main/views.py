@@ -28,7 +28,8 @@ def home(request):
     else:
         currentUser = 'admin1'
         searchParameters = f'(&(objectclass=person)(cn={currentUser}))'
-        conn.search(OUPath, searchParameters, attributes=['sAMAccountName'])                       
+        conn.search(OUPath, searchParameters, 
+                    attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])                       
         entry = conn.entries[0]
 
         return render(request, "home.html", {"entry":entry})
@@ -70,13 +71,5 @@ def userID(response, id):
         
     entry = conn.entries[0]
    
-    return render(response, "home.html", {"accountExpires":entry['accountExpires'],
-                                          "description":entry['description'],
-                                          "displayName":entry['displayName'],
-                                          "lastLogon":entry['lastLogon'],
-                                          "mail":entry['mail'],
-                                          "manager":entry['manager'],
-                                          "pwdLastSet":entry['pwdLastSet'],
-                                          "sAMAccountName":entry['sAMAccountName'],
-                                          })
+    return render(response, "home.html", {"entry":entry})
 
