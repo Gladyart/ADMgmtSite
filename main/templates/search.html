@@ -9,7 +9,7 @@
         {% csrf_token %}
         <div class="mb-3">
             <!---->
-            <input type="text" class="form-control" placeholder="Search" name="searched">
+            <input class="form-control" type="text" placeholder="Search" name="searched">
         </div>
         <button type="submit" class="btn btn-secondary">Search</button>
     </form>
@@ -17,7 +17,7 @@
 <div>
     {% if searched %}
         {% for item in searched %}
-            {{item.sAMAccountName}} <br/>
+            <a class="nav-link" href="/{{item.sAMAccountName}}">{{item.sAMAccountName}}</a> <br/>
         {% endfor %}
 
     {% endif %}
