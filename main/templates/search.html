@@ -4,22 +4,83 @@
 
 
 {% block content %}
-<div class="dir-search">
-    <form method="POST" action="{% url 'search' %}">
-        {% csrf_token %}
-        <div class="mb-3">
-            <!---->
-            <input class="form-control" type="text" placeholder="Search" name="searched">
-        </div>
-        <button type="submit" class="btn btn-secondary">Search</button>
-    </form>
-</div>
-<div>
-    {% if searched %}
-        {% for item in searched %}
-            <a class="nav-link" href="/{{item.sAMAccountName}}">{{item.sAMAccountName}}</a> <br/>
-        {% endfor %}
 
-    {% endif %}
-</div>
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item active">
+            <a class="nav-link" href="index.html">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Dashboard</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Search Stuff
+        </div>
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Search Stuff</span>
+            </a>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Custom Components:</h6>
+                    <a class="collapse-item" href="">TBC1</a>
+                    <a class="collapse-item" href="">TBC2</a>
+                </div>
+            </div>
+        </li>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+
+        <!--Search-->
+        <div class="container-fluid">
+            <div class="dir-search">
+                <form method="POST" action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <div class="mt-4 mb-3">
+                        <!---->
+                        <input class="form-control" type="text" placeholder="Search" name="searched">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </form>
+            </div>
+            <div>
+                {% if searched %}
+                    {% for item in searched %}
+                        <a class="nav-link" href="/{{item.sAMAccountName}}">{{item.sAMAccountName}}</a> <br/>
+                    {% endfor %}
+            
+                {% endif %}
+            </div>
+          
+      </div>
+      </div>
+      
+
+    </div>
+    <!-- End of Content Wrapper -->
+ 
+  </div>
+  <!-- End of Page Wrapper -->
+
+
+
 {% endblock %}

@@ -57,6 +57,7 @@ def search(request):
     else:
         return render(request, "search.html", {})
 
+"""
 def userID(response, id):
     
     userID = id
@@ -72,4 +73,4 @@ def userID(response, id):
     entry = conn.entries[0]
    
     return render(response, "home.html", {"entry":entry})
-
+"""
