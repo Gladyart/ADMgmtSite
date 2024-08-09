@@ -28,7 +28,7 @@ conn.modify('cn=user1,cn=users,dc=mydomain,dc=com',
 
 # can not install django ldap(python-ldap), some s* requires too much time
 # to do: make class based on below and learn to code it yourself I guess
-# 
+# can build from scratch I think with ldap3
 
 AUTH_LDAP_BIND_DN = "cn=admin1,cn=users,dc=mydomain,dc=com"
 AUTH_LDAP_BIND_PASSWORD = "Secret123"
