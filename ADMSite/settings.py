@@ -133,13 +133,13 @@ AUTH_LDAP_USER_SEARCH = LDAPSearch(
     "ou=MyDomain,dc=mydomain,dc=com", ldap.SCOPE_SUBTREE, "(uid=%(user)s)"
 )
 AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
-    "ou=groups,dc=example,dc=com", ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)"
+    "ou=Groups,ou=MyDomain,dc=mydomain,dc=com", ldap.SCOPE_SUBTREE, "(objectClass=groupOfNames)"
 )
 AUTH_LDAP_GROUP_TYPE = PosixGroupType(name_attr="cn")
 AUTH_LDAP_MIRROR_GROUPS = True
 
 # Populate the Django user from the LDAP directory.
-AUTH_LDAP_REQUIRE_GROUP = "cn=enabled,ou=groups,dc=example,dc=com"
+AUTH_LDAP_REQUIRE_GROUP = "cn=SG-Domain-ADM-ADManagement_site,ou=Groups,ou=MyDomain,dc=mydomain,dc=com"
 
 AUTH_LDAP_USER_ATTR_MAP = {
         "first_name": "givenName",
@@ -152,9 +152,9 @@ AUTH_LDAP_PROFILE_ATTR_MAP = {
         "home_directory": "homeDirectory"
 }
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
-        "is_active": "cn=active,ou=groups,dc=example,dc=com",
-        "is_staff": "cn=staff,ou=groups,dc=example,dc=com",
-        "is_superuser": "cn=superuser,ou=groups,dc=example,dc=com"
+        #"is_active": "cn=active,ou=groups,dc=example,dc=com",
+        "is_staff": "cn=SG-Domain-ADM-ADManagement_site,ou=Groups,ou=MyDomain,dc=mydomain,dc=com",
+        #"is_superuser": "cn=superuser,ou=groups,dc=example,dc=com"
 }
     
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
