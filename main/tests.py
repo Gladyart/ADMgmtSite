@@ -2,6 +2,7 @@ from django.test import TestCase
 
 
 # Create your tests here.
+
 from ldap3 import Server, Connection, ALL
 
 
