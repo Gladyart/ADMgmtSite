@@ -8,18 +8,18 @@ from ldap3 import Server, Connection, ALL
 
 class DCConnection():
 
-    server = Server("WINDC0001", use_ssl=False, get_info=ALL)
+    server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
 
-    conn = Connection(server, 'cn=admin1,cn=users,dc=mydomain,dc=com', 'Secret123', auto_bind=True)
+    conn = Connection(server, 'cn=gladyart,OU=users,OU=MyDomain,dc=mydomain,dc=com', 'Secret123', auto_bind=True)
     # connection test user
     # need to relate connection to login(session)
     # no TLS config applied yet
     
     #conn.search('cn=users,dc=mydomain,dc=com', '(objectclass=person)')
-    # output: [CN=admin1,CN=Users,DC=mydomain,DC=com]
+    # output: [CN=gladyart,CN=Users,DC=mydomain,DC=com]
     
-    userID = 'admin1'
-    OUPath = 'cn=users,dc=mydomain,dc=com'
+    userID = 'gladyart'
+    OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
     searchParameters = f'(&(objectclass=person)(cn={userID}))'
     # specify attr, will use on user page
     # output is sorted alfabetically by key

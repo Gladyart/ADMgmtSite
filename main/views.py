@@ -26,9 +26,15 @@ def home(request):
         else:
             return render(request, "search.html", {"searched":searched})
     else:
-        currentUser = 'admin1'
+        currentUser = 'gladyart'
         searchParameters = f'(&(objectclass=person)(cn={currentUser}))'
-        conn.search(OUPath, searchParameters, 
+        
+        try:
+            conn.search(OUPath, searchParameters, 
+                    attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])   
+        except:
+            conn.bind()
+            conn.search(OUPath, searchParameters, 
                     attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])                       
         entry = conn.entries[0]
 
@@ -57,7 +63,7 @@ def search(request):
     else:
         return render(request, "search.html", {})
 
-"""
+
 def userID(response, id):
     
     userID = id
@@ -73,4 +79,4 @@ def userID(response, id):
     entry = conn.entries[0]
    
     return render(response, "home.html", {"entry":entry})
-"""
+
