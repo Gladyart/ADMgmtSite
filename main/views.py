@@ -3,16 +3,15 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .tests import DCConnection
 
-
+conn = DCConnection.conn
+OUPath = DCConnection.OUPath
+userAttributes = ['accountExpires', 'description', 'displayName', 'distinguishedName', 'lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']
 
 def index(response):
     return render(response, "base.html")
-
+        
 def home(request):
             
-    conn = DCConnection.conn
-    OUPath = DCConnection.OUPath
-
     if request.method == "POST":
         searched = request.POST["searched"]
 
@@ -30,12 +29,10 @@ def home(request):
         searchParameters = f'(&(objectclass=person)(cn={currentUser}))'
         
         try:
-            conn.search(OUPath, searchParameters, 
-                    attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])   
+            conn.search(OUPath, searchParameters, attributes=userAttributes)   
         except:
             conn.bind()
-            conn.search(OUPath, searchParameters, 
-                    attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])                       
+            conn.search(OUPath, searchParameters, attributes=userAttributes)                     
         entry = conn.entries[0]
 
         return render(request, "home.html", {"entry":entry})
@@ -46,9 +43,6 @@ def search(request):
     if request.method == "POST":
         searched = request.POST["searched"]
         
-        conn = DCConnection.conn
-        OUPath = DCConnection.OUPath
-
         searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'
         conn.search(OUPath, searchParameters, attributes=['sAMAccountName'])
                     
@@ -68,13 +62,9 @@ def userID(response, id):
     
     userID = id
 
-    conn = DCConnection.conn
-    OUPath = DCConnection.OUPath
-
     searchParameters = f'(&(objectclass=person)(cn={userID}))'
 
-    conn.search(OUPath, searchParameters, 
-                attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
+    conn.search(OUPath, searchParameters, userAttributes)
         
     entry = conn.entries[0]
    
