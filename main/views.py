@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .tests import DCConnection
+from .ldap import DCConnection
 
 conn = DCConnection.conn
 OUPath = DCConnection.OUPath

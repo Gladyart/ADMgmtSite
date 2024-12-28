@@ -1,7 +1,69 @@
 from ldap3 import Server, Connection, ALL
 from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE
 
-server = Server("WINDC0001", use_ssl=False, get_info=ALL)
+from ldap3 import Server, Connection, ALL
+
+userID = 'gladyart'
+
+class DCConnection(userID):
+
+    server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
+    
+    OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
+
+
+    conn = Connection(server, f'cn={userID},OU=users,OU=MyDomain,dc=mydomain,dc=com', 'Secret123', auto_bind=True)
+    # connection test user
+    # need to relate connection to login(session)
+    # no TLS config applied yet
+    
+    #conn.search('cn=users,dc=mydomain,dc=com', '(objectclass=person)')
+    # output: [CN=gladyart,CN=Users,DC=mydomain,DC=com]
+    
+    
+    
+    searchParameters = f'(&(objectclass=person)(cn={userID}))'
+    # specify attr, will use on user page
+    # output is sorted alfabetically by key
+    ## for later:
+    # searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'
+    # searchParameters = f'(&(givenName={firstName}*)(mail=*@example.org))'
+
+    conn.search(OUPath, searchParameters, 
+                attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
+        
+    entry = conn.entries[0]
+
+
+
+# import AD users to SQL db via LDAP 
+
+import sqlite3 
+
+
+con = sqlite3.connect("db.sqlite3") 
+
+cur = con.cursor() 
+
+AUTH_LDAP_USER_SEARCH = "ou=MyDomain,dc=mydomain,dc=com" 
+
+searchParameters = '(objectclass=person)' 
+
+conn.search(AUTH_LDAP_USER_SEARCH, searchParameters, attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']) 
+listOfUsers = conn.entries 
+
+# manual db import 
+
+# this method didn't work well before, also found out that passing fstrin is not very secure here so need to rebuild into list like import parameters instead
+for user in listOfUsers: 
+
+    cur.execute(f"INSERT INTO main_user VALUES ({user.accountExpires}, {user.description}, {user.displayName}, {user.lastLogon}, {user.mail}, {user.manager}, {user.pwdLastSet}, {user.sAMAccountName})") 
+    con.commit()    
+
+#====
+#DJ ldap conversion to basic ldap below
+
+# server = Server("WINDC0001", use_ssl=False, get_info=ALL)
 
 conn = Connection(server, 'cn=admin1,cn=users,dc=mydomain,dc=com', 'Secret123', auto_bind=True)
 # connection test user
