@@ -1,25 +1,29 @@
 from ldap3 import Server, Connection, ALL
 from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE
 
-from ldap3 import Server, Connection, ALL
 
 userID = 'gladyart'
+#userID = 'gladyart' # not sure what is wrong now, worked before with just a string
 
-class DCConnection(userID):
+class DCConnection():
 
     server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
     
     OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
 
 
-    conn = Connection(server, f'cn={userID},OU=users,OU=MyDomain,dc=mydomain,dc=com', 'Secret123', auto_bind=True)
+    conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
+
     # connection test user
-    # need to relate connection to login(session)
     # no TLS config applied yet
+
+    def connectADServer(server, userID, OUPath):
+        conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
+
+        return conn
     
     #conn.search('cn=users,dc=mydomain,dc=com', '(objectclass=person)')
     # output: [CN=gladyart,CN=Users,DC=mydomain,DC=com]
-    
     
     
     searchParameters = f'(&(objectclass=person)(cn={userID}))'
@@ -29,15 +33,21 @@ class DCConnection(userID):
     # searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'
     # searchParameters = f'(&(givenName={firstName}*)(mail=*@example.org))'
 
-    conn.search(OUPath, searchParameters, 
-                attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
+    conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
         
     entry = conn.entries[0]
+
+    def searchADPerson(userID, OUPath, conn):
+        searchParameters = f'(&(objectclass=person)(cn={userID}))'
+        conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
+        entry = conn.entries[0]
+
+        return entry
 
 
 
 # import AD users to SQL db via LDAP 
-
+'''
 import sqlite3 
 
 
@@ -134,3 +144,4 @@ AUTHENTICATION_BACKENDS = (
         'django_auth_ldap.backend.LDAPBackend',
         'django.contrib.auth.backends.ModelBackend',
 )
+'''
