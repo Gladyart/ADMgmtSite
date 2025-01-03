@@ -34,12 +34,15 @@ class DCConnection():
     # searchParameters = f'(&(givenName={firstName}*)(mail=*@example.org))'
 
     conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
+    # other attr: Enabled, PasswordExpired, MemberOf, 
         
     entry = conn.entries[0]
 
+    isLocked = entry.lockoutTime.raw_values[0].decode('utf-8') # any output != 0 is locked
+
     def searchADPerson(userID, OUPath, conn):
         searchParameters = f'(&(objectclass=person)(cn={userID}))'
-        conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
+        conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName', 'Enabled', 'lastLogon', 'mail', 'manager', 'PasswordExpired', 'pwdLastSet', 'sAMAccountName'])
         entry = conn.entries[0]
 
         return entry
