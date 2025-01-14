@@ -33,7 +33,7 @@ class DCConnection():
     # searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'
     # searchParameters = f'(&(givenName={firstName}*)(mail=*@example.org))'
 
-    conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName','lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
+    conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName','lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
     # other attr: Enabled, PasswordExpired, MemberOf, 
         
     entry = conn.entries[0]

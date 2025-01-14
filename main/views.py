@@ -59,14 +59,12 @@ def search(request):
 
 
 def userID(response, id):
-    
-    userID = id
 
-    searchParameters = f'(&(objectclass=person)(cn={userID}))'
+    searchParameters = f'(&(objectclass=person)(cn={id}))'
 
-    conn.search(OUPath, searchParameters, userAttributes)
+    conn.search(OUPath, searchParameters, attributes=userAttributes)
         
-    entry = conn.entries[0]
+    entry = conn.entries[0] # May display error due to home and id ref to the same page. Will update later
    
     return render(response, "home.html", {"entry":entry})
 
