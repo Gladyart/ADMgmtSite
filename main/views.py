@@ -1,12 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .ldap import DCConnection
+from .ldap import DCConnection, OUPath, userAttributes
 
 conn = DCConnection.conn
-OUPath = DCConnection.OUPath
 currentUser = 'gladyart'
-userAttributes = ['accountExpires', 'description', 'displayName', 'distinguishedName', 'lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']
 
 def index(response):
     return render(response, "base.html")
@@ -61,11 +59,7 @@ def search(request):
 
 def userID(response, id):
 
-    searchParameters = f'(&(objectclass=person)(cn={id}))'
-
-    conn.search(OUPath, searchParameters, attributes=userAttributes)
-        
-    entry = conn.entries[0] # May display error due to home and id ref to the same page. Will update later
+    entry = DCConnection.searchADPerson(userID=id, OUPath=OUPath, conn = DCConnection.conn)
    
     return render(response, "AD_user.html", {"entry":entry})
 

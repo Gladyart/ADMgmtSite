@@ -3,7 +3,12 @@ from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE
 
 
 userID = 'gladyart'
-#userID = 'gladyart' # not sure what is wrong now, worked before with just a string
+
+userAttributes = ['accountExpires', 'description', 'displayName', 'distinguishedName', 'Enabled', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']
+
+server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
+
+OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
 
 class DCConnection():
 
@@ -17,7 +22,7 @@ class DCConnection():
     # connection test user
     # no TLS config applied yet
 
-    def connectADServer(server, userID, OUPath):
+    def connectADServer(userID, server=server, OUPath=OUPath):
         conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
 
         return conn
@@ -33,7 +38,7 @@ class DCConnection():
     # searchParameters = f'(&(objectclass=person)(cn=*{searched}*))'
     # searchParameters = f'(&(givenName={firstName}*)(mail=*@example.org))'
 
-    conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName','lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName'])
+    conn.search(OUPath, searchParameters, attributes=userAttributes)
     # other attr: Enabled, PasswordExpired, MemberOf, 
         
     entry = conn.entries[0]
@@ -42,7 +47,7 @@ class DCConnection():
 
     def searchADPerson(userID, OUPath, conn):
         searchParameters = f'(&(objectclass=person)(cn={userID}))'
-        conn.search(OUPath, searchParameters, attributes=['accountExpires', 'description', 'displayName', 'Enabled', 'lastLogon', 'mail', 'manager', 'PasswordExpired', 'pwdLastSet', 'sAMAccountName'])
+        conn.search(OUPath, searchParameters, attributes=userAttributes)
         entry = conn.entries[0]
 
         return entry
