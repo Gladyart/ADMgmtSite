@@ -65,7 +65,7 @@
             <div>
                 {% if searched %}
                     {% for item in searched %}
-                        <a class="nav-link" href="/{{item.sAMAccountName}}">{{item.sAMAccountName}}</a> <br/>
+                        <a class="nav-link" href="/object/{{item.sAMAccountName}}">{{item.sAMAccountName}}</a> <br/>
                     {% endfor %}
             
                 {% endif %}

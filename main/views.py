@@ -5,6 +5,7 @@ from .ldap import DCConnection
 
 conn = DCConnection.conn
 OUPath = DCConnection.OUPath
+currentUser = 'gladyart'
 userAttributes = ['accountExpires', 'description', 'displayName', 'distinguishedName', 'lastLogon', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']
 
 def index(response):
@@ -25,7 +26,7 @@ def home(request):
         else:
             return render(request, "search.html", {"searched":searched})
     else:
-        currentUser = 'gladyart'
+        
         searchParameters = f'(&(objectclass=person)(cn={currentUser}))'
         
         try:
@@ -66,5 +67,5 @@ def userID(response, id):
         
     entry = conn.entries[0] # May display error due to home and id ref to the same page. Will update later
    
-    return render(response, "home.html", {"entry":entry})
+    return render(response, "AD_user.html", {"entry":entry})
 
