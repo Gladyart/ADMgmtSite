@@ -10,6 +10,8 @@ server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
 
 OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
 
+conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
+
 class DCConnection():
 
     server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
@@ -17,7 +19,7 @@ class DCConnection():
     OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
 
 
-    conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
+    
 
     # connection test user
     # no TLS config applied yet
@@ -49,9 +51,28 @@ class DCConnection():
         searchParameters = f'(&(objectclass=person)(cn={userID}))'
         conn.search(OUPath, searchParameters, attributes=userAttributes)
         entry = conn.entries[0]
-
+        
         return entry
 
+class ADUser(DCConnection):
+
+    def __init__(self):
+        super().__init__()
+        entry = super().searchADPerson(userID, OUPath, conn)
+        self.accountExpires = entry.accountExpires
+        self.description = entry.description
+        self.displayName = entry.displayName
+        self.distinguishedName = entry.distinguishedName
+        if entry.lockoutTime.raw_values[0].decode('utf-8') != b'0':
+            self.Enabled = 'Account Disabled!'
+        else:
+            self.Enabled = None
+        self.lastLogon = entry.lastLogon
+        self.lockoutTime = entry.lockoutTime
+        self.mail = entry.mail
+        self.manager = entry.manager
+        self.pwdLastSet = entry.pwdLastSet
+        self.sAMAccountName = entry.sAMAccountName
 
 
 # import AD users to SQL db via LDAP 
