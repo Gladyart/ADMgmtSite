@@ -144,15 +144,17 @@
         <!--Properties-->
         <div class="container-fluid">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h3 class="h3 mt-4 mb-0 text-gray-800">{{entry.sAMAccountName}}</h3>
-            <h4 class="h4 mt-4 mb-0 text-gray-800">{{entry.distinguishedName}}</h4>
+            <h3 class="h3 mt-4 mb-0 text-gray-800">{{entry.sAMAccountName}}
+                <h4 class="small font-weight-bold text-gray-800">{{entry.locked}}</h4>
+            </h3>
+
+            <h4 class="small mt-1 mb-0 text-gray-800">{{entry.distinguishedName}}</h4>
           </div>
           
           <div class="row">
             
             <div class="card-body">
-                <h4 class="small font-weight-bold text-gray-800">Display name:
-                    <span>{{entry.displayName}}</span>c
+                <h4 class="small font-weight-bold text-gray-800">Display name: {{entry.displayName}}
                         <hr class="mt-0 mb-4">
                   </h4>        
                 <h4 class="small font-weight-bold text-gray-800">Description:
@@ -166,7 +168,7 @@
                     </a>
                 </h4>           
                 <h4 class="small font-weight-bold text-gray-800">Manager:
-                    <a href="/home">{{entry.manager}}
+                    <a href="/object/{{entry.manager.cn}}">{{entry.manager.displayName}}
                         <hr class="mt-0 mb-4">
                     </a>
                 </h4>      
@@ -174,7 +176,11 @@
                     <span>{{entry.accountExpires}}
                         <hr class="mt-0 mb-4">
                     </span>
-                </h4>  
+                </h4>
+                <h4 class="small font-weight-bold text-gray-800">Lockout time:
+                    <span>{{entry.lockoutTime}}
+                        <hr class="mt-0 mb-4">
+                    </span>  
                 <h4 class="small font-weight-bold text-gray-800">Last Logon:
                     <span>{{entry.lastLogon}}
                         <hr class="mt-0 mb-4">

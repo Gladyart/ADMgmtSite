@@ -4,7 +4,7 @@ from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE
 
 userID = 'gladyart'
 
-userAttributes = ['accountExpires', 'description', 'displayName', 'distinguishedName', 'Enabled', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']
+userAttributes = ['accountExpires', 'cn','description', 'displayName', 'distinguishedName', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']
 
 server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
 
@@ -17,6 +17,8 @@ class DCConnection():
     server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
     
     OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
+
+    conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
 
 
     
@@ -47,8 +49,8 @@ class DCConnection():
 
     isLocked = entry.lockoutTime.raw_values[0].decode('utf-8') # any output != 0 is locked
 
-    def searchADPerson(userID, OUPath, conn):
-        searchParameters = f'(&(objectclass=person)(cn={userID}))'
+    def searchADPerson(self):
+        searchParameters = f'(&(objectclass=person)(cn={self}))'
         conn.search(OUPath, searchParameters, attributes=userAttributes)
         entry = conn.entries[0]
         
@@ -56,24 +58,45 @@ class DCConnection():
 
 class ADUser(DCConnection):
 
-    def __init__(self):
-        super().__init__()
-        entry = super().searchADPerson(userID, OUPath, conn)
+    def __init__(self, id, *args):
+        
+        entry = ADSearch.searchADPerson(id)
         self.accountExpires = entry.accountExpires
         self.description = entry.description
         self.displayName = entry.displayName
-        self.distinguishedName = entry.distinguishedName
-        if entry.lockoutTime.raw_values[0].decode('utf-8') != b'0':
-            self.Enabled = 'Account Disabled!'
-        else:
-            self.Enabled = None
+        self.distinguishedName = entry.distinguishedName            
         self.lastLogon = entry.lastLogon
+        self.locked = None 
         self.lockoutTime = entry.lockoutTime
+        self.lockoutTimeRaw = entry.lockoutTime.raw_values[0].decode('utf-8')
         self.mail = entry.mail
-        self.manager = entry.manager
+        self.manager = ADSearch.searchManager(entry.manager)
         self.pwdLastSet = entry.pwdLastSet
         self.sAMAccountName = entry.sAMAccountName
 
+    def lockoutStatusCheck(self, id):
+        ADSearch.searchADPerson(id)
+        if self.lockoutTimeRaw != '0':
+            self.locked = 'Account Locked!'
+        else:
+            self.locked = None    
+    
+
+class ADSearch(DCConnection):
+    
+    def searchManager(DN):
+        searchParameters = f'(&(objectclass=person)(distinguishedName={DN}))'
+        conn.search(OUPath, searchParameters, attributes=userAttributes)
+        entry = conn.entries[0]
+        
+        return entry
+    
+    def searchADPerson(id):
+        searchParameters = f'(&(objectclass=person)(cn={id}))'
+        conn.search('OU=users,OU=MyDomain,dc=mydomain,dc=com', searchParameters, attributes=userAttributes)
+        entry = conn.entries[0]
+        
+        return entry
 
 # import AD users to SQL db via LDAP 
 '''
