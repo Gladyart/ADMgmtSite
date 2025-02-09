@@ -2,7 +2,7 @@ from ldap3 import Server, Connection, ALL
 from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE
 
 
-userID = 'gladyart'
+userID = 'Admin'
 
 userAttributes = ['accountExpires', 'cn','description', 'displayName', 'distinguishedName', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']
 
@@ -47,7 +47,7 @@ class DCConnection():
         
     entry = conn.entries[0]
 
-    isLocked = entry.lockoutTime.raw_values[0].decode('utf-8') # any output != 0 is locked
+    #isLocked = entry.lockoutTime.raw_values[0].decode('utf-8') # any output != 0 is locked
 
     def searchADPerson(self):
         searchParameters = f'(&(objectclass=person)(cn={self}))'
@@ -65,9 +65,10 @@ class ADUser(DCConnection):
         self.description = entry.description
         self.displayName = entry.displayName
         self.distinguishedName = entry.distinguishedName            
-        self.lastLogon = entry.lastLogon
-        self.locked = None 
+        self.lastLogon = entry.lastLogon 
         self.lockoutTime = entry.lockoutTime
+        if self.lockoutTime == None:
+            ADUser.unlockUser(self)
         self.lockoutTimeRaw = entry.lockoutTime.raw_values[0].decode('utf-8')
         self.mail = entry.mail
         self.manager = ADSearch.searchManager(entry.manager)
@@ -77,9 +78,13 @@ class ADUser(DCConnection):
     def lockoutStatusCheck(self, id):
         ADSearch.searchADPerson(id)
         if self.lockoutTimeRaw != '0':
-            self.locked = 'Account Locked!'
+            self.locked = True
         else:
-            self.locked = None    
+            self.locked = False
+
+    def unlockUser(self):
+        conn.modify(f'{self.distinguishedName}',
+         {'lockoutTime': [(MODIFY_REPLACE, [0])]})    
     
 
 class ADSearch(DCConnection):

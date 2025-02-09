@@ -12,26 +12,35 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Nav Item - Account control -->
-        <li class="nav-item active">
-            <a class="nav-link" href="">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>Lock account</span></a>
-        </li>
+        {% if entry.lockoutTimeRaw != 0 %}
         <li class="nav-item active">
             <a class="nav-link" href="">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Unlock account</span></a>
         </li>
+        {% else %}
         <li class="nav-item active">
             <a class="nav-link" href="">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>Disable account</span></a>
+                <span>Lock account</span></a>
         </li>
+        {% endif %}
+        <!-- Placeholder -->
+        {% if entry.lockoutTimeRaw != 0 %}
         <li class="nav-item active">
             <a class="nav-link" href="">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Enable Account</span></a>
         </li>
+        {% else %}
+        <li class="nav-item active">
+            <a class="nav-link" href="">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Disable account</span></a>
+        </li>
+        {% endif %}
+        
+        
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -145,7 +154,9 @@
         <div class="container-fluid">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h3 class="h3 mt-4 mb-0 text-gray-800">{{entry.sAMAccountName}}
-                <h4 class="small font-weight-bold text-gray-800">{{entry.locked}}</h4>
+                {% if entry.lockoutTimeRaw != 0 %}
+                <h4 class="small font-weight-bold text-gray-800">Account Locked!</h4>
+                {% endif %}
             </h3>
 
             <h4 class="small mt-1 mb-0 text-gray-800">{{entry.distinguishedName}}</h4>

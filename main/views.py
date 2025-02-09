@@ -4,7 +4,7 @@ from django.contrib import messages
 from .ldap import DCConnection, ADUser, OUPath, userAttributes
 
 conn = DCConnection.conn
-currentUser = 'gladyart'
+currentUser = 'Admin'
 
 def index(response):
     return render(response, "base.html")
