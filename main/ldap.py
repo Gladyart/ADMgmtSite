@@ -4,7 +4,7 @@ from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE
 
 userID = 'Admin'
 
-userAttributes = ['accountExpires', 'cn','description', 'displayName', 'distinguishedName', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName']
+userAttributes = ['accountExpires', 'badPwdCount', 'CannotChangePassword', 'Created' 'cn','description', 'displayName', 'distinguishedName', 'extensionAttribute10', 'extensionAttribute11', 'extensionAttribute12', 'GivenName', 'HomeDirectory', 'HomeDrive', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName', 'sn', 'userAccountControl']
 
 server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
 
@@ -69,7 +69,7 @@ class ADUser(DCConnection):
         if entry.lockoutTime == None:
             ADUser.unlockUser(self)
             self.lockoutTime = ""
-            self.lockoutTimeRaw = '0'
+            self.lockoutTimeRaw = 0
         else:
             self.lockoutTime = entry.lockoutTime
             self.lockoutTimeRaw = int(entry.lockoutTime.raw_values[0].decode('utf-8'))
@@ -84,7 +84,15 @@ class ADUser(DCConnection):
 
     def unlockUser(self):
         conn.modify(f'{self.distinguishedName}',
-         {'lockoutTime': [(MODIFY_REPLACE, [0])]})    
+         {'lockoutTime': [(MODIFY_REPLACE, [0])]})
+        
+    def enableUser(self):
+        conn.modify(f'{self.distinguishedName}',
+         {'userAccountControl': [(MODIFY_REPLACE, [512])]})
+
+    def disableUser(self):
+        conn.modify(f'{self.distinguishedName}',
+         {'userAccountControl': [(MODIFY_REPLACE, [514])]})
     
 
 class ADSearch(DCConnection):
