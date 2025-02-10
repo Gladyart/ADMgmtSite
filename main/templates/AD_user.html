@@ -189,9 +189,10 @@
                     </span>
                 </h4>
                 <h4 class="small font-weight-bold text-gray-800">Lockout time:
-                    <span>{{entry.lockoutTime}}
-                        <hr class="mt-0 mb-4">
-                    </span>  
+                    {% if entry.lockoutTimeRaw != 0 %}
+                    <span>{{entry.lockoutTime}}</span>
+                    {% endif %}
+                    <hr class="mt-0 mb-4">
                 <h4 class="small font-weight-bold text-gray-800">Last Logon:
                     <span>{{entry.lastLogon}}
                         <hr class="mt-0 mb-4">

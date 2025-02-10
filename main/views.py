@@ -53,7 +53,7 @@ def search(request):
 def userID(response, id):
 
     entry = ADUser(id)
-    ADUser.lockoutStatusCheck(entry, id)
+    
    
     return render(response, "AD_user.html", {"entry":entry})
 

@@ -65,22 +65,22 @@ class ADUser(DCConnection):
         self.description = entry.description
         self.displayName = entry.displayName
         self.distinguishedName = entry.distinguishedName            
-        self.lastLogon = entry.lastLogon 
-        self.lockoutTime = entry.lockoutTime
-        if self.lockoutTime == None:
+        self.lastLogon = entry.lastLogon
+        if entry.lockoutTime == None:
             ADUser.unlockUser(self)
-        self.lockoutTimeRaw = entry.lockoutTime.raw_values[0].decode('utf-8')
+            self.lockoutTime = ""
+            self.lockoutTimeRaw = '0'
+        else:
+            self.lockoutTime = entry.lockoutTime
+            self.lockoutTimeRaw = int(entry.lockoutTime.raw_values[0].decode('utf-8'))
         self.mail = entry.mail
-        self.manager = ADSearch.searchManager(entry.manager)
+        if entry.manager == None:
+            self.manager = ""
+        else:
+            self.manager = ADSearch.searchManager(entry.manager)
         self.pwdLastSet = entry.pwdLastSet
         self.sAMAccountName = entry.sAMAccountName
 
-    def lockoutStatusCheck(self, id):
-        ADSearch.searchADPerson(id)
-        if self.lockoutTimeRaw != '0':
-            self.locked = True
-        else:
-            self.locked = False
 
     def unlockUser(self):
         conn.modify(f'{self.distinguishedName}',
