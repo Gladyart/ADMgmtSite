@@ -80,6 +80,7 @@ class ADUser(DCConnection):
             self.manager = ADSearch.searchManager(entry.manager)
         self.pwdLastSet = entry.pwdLastSet
         self.sAMAccountName = entry.sAMAccountName
+        self.userAccountControl = entry.userAccountControl
 
 
     def unlockUser(self):

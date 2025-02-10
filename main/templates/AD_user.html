@@ -157,6 +157,12 @@
                 {% if entry.lockoutTimeRaw != 0 %}
                 <h4 class="small font-weight-bold text-gray-800">Account Locked!</h4>
                 {% endif %}
+                {% if entry.userAccountControl == 514 %}
+                <h4 class="small font-weight-bold text-gray-800">Account Disabled!</h4>
+                {% endif %}
+                {% if entry.userAccountControl == 514 %}
+                <h4 class="small font-weight-bold text-gray-800">Password Expired!</h4>
+                {% endif %}
             </h3>
 
             <h4 class="small mt-1 mb-0 text-gray-800">{{entry.distinguishedName}}</h4>
