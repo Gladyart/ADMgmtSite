@@ -155,7 +155,7 @@
                 {% if entry.userAccountControl == 514 or entry.userAccountControl == 66050 %}
                 <h4 class="small font-weight-bold text-gray-800">Account Disabled!</h4>
                 {% endif %}
-                {% if entry.userAccountControl == 514 %}
+                {% if entry.pwdLastSetRaw == 0 %}
                 <h4 class="small font-weight-bold text-gray-800">Password Expired!</h4>
                 {% endif %}
             </h3>

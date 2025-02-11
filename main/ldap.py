@@ -79,6 +79,7 @@ class ADUser(DCConnection):
         else:
             self.manager = ADSearch.searchManager(entry.manager)
         self.pwdLastSet = entry.pwdLastSet
+        self.pwdLastSetRaw = int(entry.pwdLastSet.raw_values[0].decode('utf-8'))
         self.sAMAccountName = entry.sAMAccountName
         self.userAccountControl = entry.userAccountControl
 
