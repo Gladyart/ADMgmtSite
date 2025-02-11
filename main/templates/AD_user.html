@@ -15,7 +15,7 @@
         {% if entry.lockoutTimeRaw != 0 %}
         <li class="nav-item active">
             <a class="nav-link" href="">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <i class="fas fa-fw fa-user"></i>
                 <span>Unlock account</span></a>
         </li>
         </li>
@@ -24,17 +24,21 @@
         {% if entry.userAccountControl == 514 or entry.userAccountControl == 66050%}
         <li class="nav-item active">
             <a class="nav-link" href="">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <i class="fas fa-fw fa-user"></i>
                 <span>Enable Account</span></a>
         </li>
         {% else %}
         <li class="nav-item active">
             <a class="nav-link" href="">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <i class="fas fa-fw fa-user"></i>
                 <span>Disable account</span></a>
         </li>
         {% endif %}
-        
+        <li class="nav-item active">
+            <a class="nav-link" href="">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Change Password</span></a>
+        </li>
         
 
         <!-- Divider -->

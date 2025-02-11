@@ -73,7 +73,10 @@ class ADUser(DCConnection):
         else:
             self.lockoutTime = entry.lockoutTime
             self.lockoutTimeRaw = int(entry.lockoutTime.raw_values[0].decode('utf-8'))
-        self.mail = entry.mail
+        if entry.mail == None:
+            self.mail = ""
+        else:
+            self.mail = entry.mail
         if entry.manager == None:
             self.manager = ""
         else:
