@@ -4,7 +4,7 @@ from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE
 
 userID = 'Admin'
 
-userAttributes = ['accountExpires', 'badPwdCount', 'CannotChangePassword', 'Created' 'cn','description', 'displayName', 'distinguishedName', 'extensionAttribute10', 'extensionAttribute11', 'extensionAttribute12', 'GivenName', 'HomeDirectory', 'HomeDrive', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName', 'sn', 'userAccountControl']
+userAttributes = ['accountExpires', 'badPwdCount', 'cn','description', 'displayName', 'distinguishedName', 'GivenName', 'HomeDirectory', 'HomeDrive', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName', 'sn', 'userAccountControl']
 
 server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
 
@@ -85,15 +85,24 @@ class ADUser(DCConnection):
 
     def unlockUser(self):
         conn.modify(f'{self.distinguishedName}',
-         {'lockoutTime': [(MODIFY_REPLACE, [0])]})
-        
+                    {'lockoutTime': [(MODIFY_REPLACE, [0])]})
+
+    # 512=Enabled, 514=Disabled, 66048=Enable/PassNoExpire, 66050=Disable/PassNoExpire    
     def enableUser(self):
-        conn.modify(f'{self.distinguishedName}',
-         {'userAccountControl': [(MODIFY_REPLACE, [512])]})
+        if self.userAccountControl == 514:
+            conn.modify(f'{self.distinguishedName}',
+                        {'userAccountControl': [(MODIFY_REPLACE, [512])]})
+        elif self.userAccountControl == 66050:
+            conn.modify(f'{self.distinguishedName}',
+                        {'userAccountControl': [(MODIFY_REPLACE, [66048])]})
 
     def disableUser(self):
-        conn.modify(f'{self.distinguishedName}',
-         {'userAccountControl': [(MODIFY_REPLACE, [514])]})
+        if self.userAccountControl == 512:
+            conn.modify(f'{self.distinguishedName}',
+                        {'userAccountControl': [(MODIFY_REPLACE, [514])]})
+        elif self.userAccountControl == 66048:
+            conn.modify(f'{self.distinguishedName}',
+                        {'userAccountControl': [(MODIFY_REPLACE, [66050])]})
     
 
 class ADSearch(DCConnection):
