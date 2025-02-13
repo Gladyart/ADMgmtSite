@@ -14,30 +14,29 @@
         <!-- Nav Item - Account control -->
         {% if entry.lockoutTimeRaw != 0 %}
         <li class="nav-item active">
-            <a class="nav-link" href="">
+            <a class="nav-link" data-method="method4" href="">
                 <i class="fas fa-fw fa-user"></i>
                 <span>Unlock account</span></a>
-        </li>
         </li>
         {% endif %}
         <!-- Placeholder -->
         {% if entry.userAccountControl == 514 or entry.userAccountControl == 66050%}
         <li class="nav-item active">
-            <a class="nav-link" href="">
+            <a class="nav-link" id="enableUser" data-method="method1" href="{% url 'userID' id=entry.sAMAccountName %}?method=method1">                
                 <i class="fas fa-fw fa-user"></i>
                 <span>Enable Account</span></a>
         </li>
         {% else %}
         <li class="nav-item active">
-            <a class="nav-link" href="">
+            <a class="nav-link" id="disableUser" data-method="method2" href="{% url 'userID' id=entry.sAMAccountName %}?method=method2">                
                 <i class="fas fa-fw fa-user"></i>
                 <span>Disable account</span></a>
         </li>
         {% endif %}
-        <li class="nav-item active">
-            <a class="nav-link" href="">
+        <li class="nav-item active">            
+            <a class="nav-link" data-method="method3">
                 <i class="fas fa-fw fa-user"></i>
-                <span>Change Password</span></a>
+                Change Password</a>
         </li>
         
 
@@ -216,5 +215,22 @@
  
   </div>
   <!-- End of Page Wrapper -->
+
+    <script>
+    $(document).ready(function() {
+        $(".nav-link").click(function(event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'GET',
+                url: $(this).attr('href'),
+                success: function(data) {
+                    alert("Method executed!");
+                    window.location.href = "{% url 'userID' id=entry.sAMAccountName %}";
+                }
+            });
+        });
+    });
+    </script>
+    
 
 {% endblock %}
