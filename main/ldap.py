@@ -6,17 +6,17 @@ userID = 'Admin'
 
 userAttributes = ['accountExpires', 'badPwdCount', 'cn','description', 'displayName', 'distinguishedName', 'GivenName', 'HomeDirectory', 'HomeDrive', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName', 'sn', 'userAccountControl']
 
-server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
+server = Server("192.168.0.20", use_ssl=False, get_info=ALL)
 
-OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
+OUPath = 'OU=users,OU=MyDomain,dc=testdomain,dc=com'
 
 conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
 
 class DCConnection():
 
-    server = Server("192.168.0.17", use_ssl=False, get_info=ALL)
+    #server = Server("192.168.0.20", use_ssl=False, get_info=ALL)
     
-    OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
+    #OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
 
     conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
 
@@ -120,7 +120,7 @@ class ADSearch(DCConnection):
     
     def searchADPerson(id):
         searchParameters = f'(&(objectclass=person)(cn={id}))'
-        conn.search('OU=users,OU=MyDomain,dc=mydomain,dc=com', searchParameters, attributes=userAttributes)
+        conn.search(OUPath, searchParameters, attributes=userAttributes)
         entry = conn.entries[0]
         
         return entry
