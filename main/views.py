@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
-from .ldap import DCConnection, ADUser, OUPath, userAttributes
+from .ldap import DCConnection, ADUser, OUPath, conn
 
-conn = DCConnection.conn
+
 currentUser = 'Admin'
 
 def index(response):

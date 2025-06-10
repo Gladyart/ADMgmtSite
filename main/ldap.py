@@ -1,16 +1,22 @@
 from ldap3 import Server, Connection, ALL
 from ldap3 import MODIFY_ADD, MODIFY_DELETE, MODIFY_REPLACE
 
+from dotenv import load_dotenv
+import os
 
-userID = 'Admin'
+
+dotenv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dev.env")
+load_dotenv(dotenv_path=dotenv_path)
+
+userID = os.getenv('UserID')
 
 userAttributes = ['accountExpires', 'badPwdCount', 'cn','description', 'displayName', 'distinguishedName', 'GivenName', 'HomeDirectory', 'HomeDrive', 'lastLogon', 'lockoutTime', 'mail', 'manager', 'pwdLastSet', 'sAMAccountName', 'sn', 'userAccountControl']
 
-server = Server("192.168.0.20", use_ssl=False, get_info=ALL)
+server = Server(os.getenv('ServerIP'), use_ssl=False, get_info=ALL)
 
-OUPath = 'OU=users,OU=MyDomain,dc=testdomain,dc=com'
+OUPath = os.getenv('DefaultOUPath')
 
-conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
+conn = Connection(server, f'cn={userID},{os.getenv('DefaultUserOUPath')}', os.getenv('UserPassword'), auto_bind=True)
 
 class DCConnection():
 
@@ -18,7 +24,7 @@ class DCConnection():
     
     #OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
 
-    conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
+    #conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
 
 
     
@@ -49,12 +55,12 @@ class DCConnection():
 
     #isLocked = entry.lockoutTime.raw_values[0].decode('utf-8') # any output != 0 is locked
 
-    def searchADPerson(self):
+    '''def searchADPerson(self):
         searchParameters = f'(&(objectclass=person)(cn={self}))'
         conn.search(OUPath, searchParameters, attributes=userAttributes)
         entry = conn.entries[0]
         
-        return entry
+        return entry'''
 
 class ADUser(DCConnection):
 
@@ -91,7 +97,8 @@ class ADUser(DCConnection):
         conn.modify(f'{self.distinguishedName}',
                     {'lockoutTime': [(MODIFY_REPLACE, [0])]})
 
-    # 512=Enabled, 514=Disabled, 66048=Enable/PassNoExpire, 66050=Disable/PassNoExpire    
+    # 512=Enabled, 514=Disabled, 66048=Enable/PassNoExpire, 66050=Disable/PassNoExpire
+    # Refactor elif possible?    
     def enableUser(self):
         if self.userAccountControl == 514:
             conn.modify(f'{self.distinguishedName}',
@@ -111,19 +118,25 @@ class ADUser(DCConnection):
 
 class ADSearch(DCConnection):
     
-    def searchManager(DN):
-        searchParameters = f'(&(objectclass=person)(distinguishedName={DN}))'
-        conn.search(OUPath, searchParameters, attributes=userAttributes)
-        entry = conn.entries[0]
-        
-        return entry
-    
     def searchADPerson(id):
         searchParameters = f'(&(objectclass=person)(cn={id}))'
         conn.search(OUPath, searchParameters, attributes=userAttributes)
         entry = conn.entries[0]
         
         return entry
+    
+    def searchManager(DN):
+        searchParameters = f'(&(objectclass=person)(distinguishedName={DN}))'
+        conn.search(OUPath, searchParameters, attributes=userAttributes)
+        entry = conn.entries[0]
+        
+        return entry   
+
+
+if __name__ == '__main__':
+    pass
+    #main()
+
 
 # import AD users to SQL db via LDAP 
 '''
