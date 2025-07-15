@@ -19,18 +19,7 @@ OUPath = os.getenv('DefaultOUPath')
 conn = Connection(server, f'cn={userID},{os.getenv('DefaultUserOUPath')}', os.getenv('UserPassword'), auto_bind=True)
 
 class DCConnection():
-
-    #server = Server("192.168.0.20", use_ssl=False, get_info=ALL)
     
-    #OUPath = 'OU=users,OU=MyDomain,dc=mydomain,dc=com'
-
-    #conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)
-
-
-    
-
-    # connection test user
-    # no TLS config applied yet
 
     def connectADServer(userID, server=server, OUPath=OUPath):
         conn = Connection(server, f'cn={userID},{OUPath}', 'Secret123', auto_bind=True)

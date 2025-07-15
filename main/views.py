@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth import views as auth_views
+
 from .ldap import DCConnection, ADUser, OUPath, conn
+from .login_form import CustomLoginForm
 
 
 currentUser = 'Admin'
@@ -56,7 +59,7 @@ def userID(request, id):
     entry = ADUser(id)
 
     method = request.GET.get('method')
-    if method == 'method1':            
+    '''if method == 'method1':            
         ADUser.enableUser(entry)
         return HttpResponseRedirect(reverse('userID', args=(entry.sAMAccountName)))
     elif method == 'method2':            
@@ -67,8 +70,30 @@ def userID(request, id):
     elif method == 'method4':
         ADUser.unlockUser(entry)
     elif method == None:
-        pass
+        pass'''
+    reloadUserPage = HttpResponseRedirect(reverse('userID', args=(entry.sAMAccountName)))
+    
+    match method:
+        case 'method1':
+            ADUser.enableUser(entry)
+            return reloadUserPage
+        case 'method2':
+            ADUser.disableUser(entry)
+            return reloadUserPage
+        case 'method3':
+            pass
+        case 'method4':
+            ADUser.unlockUser(entry)
+            return reloadUserPage
+        case _:
+            pass
         
    
     return render(request, "AD_user.html", {"entry":entry, "currentUser":currentUser})
 
+def login(request ):
+    auth_views.LoginView.as_view(
+        template_name='login.html',
+        authentication_form=CustomLoginForm
+    )
+    return render(request, "login.html", {"currentUser":currentUser})
